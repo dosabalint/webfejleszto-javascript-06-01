@@ -19,3 +19,11 @@ div#box {
     height: 40px;
     background-color: black;
 }
+
+div.ball{
+    position: absolute;
+    background-color: chartreuse;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+}
