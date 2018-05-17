@@ -18,9 +18,16 @@ div#box {
     width: 80px;
     height: 40px;
     background-color: black;
+    text-align: center;
+    color: white;
+    border-top: 5px solid green;
 }
 
-div.ball{
+div#box span {
+    color: white;
+}
+
+div.ball {
     position: absolute;
     background-color: chartreuse;
     width: 20px;

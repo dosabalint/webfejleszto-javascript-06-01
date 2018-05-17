@@ -1,14 +1,16 @@
 class Box {
-    constructor(id, gameElement) {
+    constructor(id, game) {
         this.element = document.getElementById(id);
-        this.gameElement = gameElement;
+        this.game = game;
         this.mouseX = null;
 
         // feliratkozás
-        gameElement.addEventListener('mousemove', event => {
+        game.element.addEventListener('mousemove', event => {
             this.OnMouseMove(event.clientX);
         });
     }
+
+    // eseménykezelő
 
     OnMouseMove(mouseX) {
         if (mouseX == this.mouseX) {
@@ -18,11 +20,24 @@ class Box {
         this.UpdatePosition();
     }
 
+    
+    // szélesség és magasság
+
+    GetHeight() {
+        return this.element.clientHeight;
+    }
+
+    GetWidth() {
+        return this.element.clientWidth;
+    }
+
+    // pozíció
+
     UpdatePosition() {
         // számoláshoz szükséges értékek
-        let boxWidth = this.element.clientWidth,
+        let boxWidth = this.GetWidth(),
             boxHalfWidth = boxWidth / 2,
-            gameWidth = this.gameElement.clientWidth,
+            gameWidth = this.game.element.clientWidth,
             elementLeft = this.mouseX - boxHalfWidth;
 
         // határok betartása
@@ -31,5 +46,9 @@ class Box {
 
         // HTML elem bal pozíciójának beállítása
         this.element.style.left = elementLeft + 'px';
+    }
+
+    GetLeftDistance() {
+        return +this.element.style.left.replace('px', '');
     }
 }

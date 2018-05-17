@@ -1,19 +1,18 @@
 class Ball {
-    constructor(gameElement) {
+    constructor(game) {
         // paraméterekből beállítás
-        this.gameElement = gameElement;
+        this.game = game;
 
         // labda HTML elem létrehozása
         this.element = document.createElement('div');
         this.element.className = 'ball';
 
         // játékhoz csatolás
-        this.gameElement.appendChild(this.element);
+        this.game.element.appendChild(this.element);
 
         // pozicionálás
         this.SetBottomDistance(
-            this.gameElement.clientHeight -
-            this.GetHeight()
+            this.game.element.clientHeight - this.GetHeight()
         );
         this.SetLeftDistance(this.GetRandomXPosition());
 
@@ -24,16 +23,24 @@ class Ball {
     // zuhanás
 
     Fall() {
-        // validálás
+        if (this.destroyed) {
+            return;
+        }
+
+        // megsemmisítés ha leesett
+        if (this.GetBottomDistance() <= this.game.box.GetHeight()) {
+            this.TriggerFellInLine();
+        }
+
+        // megsemmisítés ha leesett
         if (this.GetBottomDistance() <= 0) {
             this.Destroy();
+            this.TriggerFellOff();
             return;
         }
 
         // mozgás
-        this.SetBottomDistance(
-            this.GetBottomDistance() - 1
-        );
+        this.SetBottomDistance(this.GetBottomDistance() - 1);
 
         // mozgás időzítése
         setTimeout(() => {
@@ -74,13 +81,27 @@ class Ball {
     // pozicionálás
 
     GetRandomXPosition() {
-        let gameWidth = this.gameElement.clientWidth,
+        let gameWidth = this.game.element.clientWidth,
             ballWidth = this.GetWidth();
         return Math.round(Math.random() * (gameWidth - ballWidth));
     }
 
     Destroy() {
-        console.log('destroy');
-        this.gameElement.removeChild(this.element);
+        this.element.style.display = 'none';
+        this.destroyed = true;
+    }
+
+    // események
+
+    TriggerFellInLine() {
+        window.dispatchEvent(
+            new CustomEvent('ball/fellInLine', {
+                detail: this
+            })
+        );
+    }
+
+    TriggerFellOff() {
+        window.dispatchEvent(new Event('ball/fellOff'));
     }
 }
